@@ -51,6 +51,8 @@ Call `mcp__discord__discord_get_invite_url` (default permissions = `8`, Administ
 >
 > It needs **Administrator** permission to do everything I'll be doing — channel/role management, AutoMod rules, welcome screens, etc. (You can pick a narrower scope later by re-running `/discord:setup` and asking for custom permissions.)
 >
+> **If the page only asks for "Create slash commands"** (no server picker, no Administrator checkbox), your bot's app isn't configured for **Guild Install** in the Developer Portal. Fix it once: https://discord.com/developers/applications → your app → **Installation** → check **Guild Install** under Installation Contexts → under **Default Install Settings → Guild Install** set scopes to `bot, applications.commands` and permissions to **Administrator** → **Save Changes**. Then reopen the invite URL above.
+>
 > Let me know once you've added it to a server and I'll pick up from there.
 
 Wait for the user to confirm. Then loop back to **Step 2** (call `discord_list_guilds` again).

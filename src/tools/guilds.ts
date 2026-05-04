@@ -167,7 +167,7 @@ export function registerGuildSetupTools(server: McpServer): void {
     'discord_get_invite_url',
     {
       description:
-        "Generates the OAuth2 URL the user opens to add this bot to a guild they own or admin. Defaults to Administrator permissions (integer 8) — what this plugin needs for full functionality. Use when discord_list_guilds returns 0 guilds, or when the user wants to add the bot to another guild.",
+        "Generates the OAuth2 URL the user opens to add this bot to a guild they own or admin. Defaults to Administrator permissions (integer 8) — what this plugin needs for full functionality. Includes integration_type=0 (GUILD_INSTALL) to ensure the bot installs to a server, not a user account. Use when discord_list_guilds returns 0 guilds, or when the user wants to add the bot to another guild.",
       inputSchema: {
         permissions: z
           .string()
@@ -185,9 +185,13 @@ export function registerGuildSetupTools(server: McpServer): void {
         const rest = getRest();
         const user = (await rest.get(Routes.user('@me'))) as APIUser;
         const perms = permissions ?? '8';
-        const url = `https://discord.com/oauth2/authorize?client_id=${user.id}&permissions=${encodeURIComponent(
-          perms,
-        )}&scope=bot%20applications.commands`;
+        const params = new URLSearchParams({
+          client_id: user.id,
+          scope: 'bot applications.commands',
+          permissions: perms,
+          integration_type: '0',
+        });
+        const url = `https://discord.com/oauth2/authorize?${params.toString()}`;
         return {
           content: [
             {
@@ -198,10 +202,13 @@ export function registerGuildSetupTools(server: McpServer): void {
                   bot_id: user.id,
                   bot_username: user.username,
                   permissions: perms,
+                  integration_type: 'GUILD_INSTALL',
                   note:
                     perms === '8'
                       ? 'Administrator (full access). Required for AutoMod, role management, and most admin operations.'
                       : 'Custom permissions integer.',
+                  troubleshooting:
+                    "If the OAuth2 page only asks for 'Create slash commands' (no server picker, no Administrator checkbox), the bot's app isn't configured for Guild Install. Fix: https://discord.com/developers/applications → your app → Installation → set Installation Contexts to include 'Guild Install', then under Default Install Settings → Guild Install set scopes to bot + applications.commands and permissions to Administrator. Save, then reopen the invite URL.",
                 },
                 null,
                 2,
