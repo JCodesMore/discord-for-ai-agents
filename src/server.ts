@@ -9,6 +9,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { registerWhoamiTool } from './tools/whoami.js';
 import { registerGuildSetupTools } from './tools/guilds.js';
 import { registerChannelTools } from './tools/channels.js';
+import { registerRoleTools } from './tools/roles.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json'), 'utf-8'));
@@ -21,6 +22,7 @@ const server = new McpServer({
 registerWhoamiTool(server);
 registerGuildSetupTools(server);
 registerChannelTools(server);
+registerRoleTools(server);
 
 async function main() {
   const transport = new StdioServerTransport();
