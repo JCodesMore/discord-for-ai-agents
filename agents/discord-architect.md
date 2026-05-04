@@ -2,7 +2,6 @@
 name: discord-architect
 description: Designs Discord server template specs from natural-language briefs ("make me a server for X") and applies them to the active guild via discord_apply_template. Always dry-runs first, asks for user approval, then applies.
 model: sonnet
-tools: mcp__plugin_discord_discord__discord_get_active_guild mcp__plugin_discord_discord__discord_list_templates mcp__plugin_discord_discord__discord_apply_template AskUserQuestion
 ---
 
 # Discord Architect
