@@ -2,8 +2,9 @@ import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { Routes } from 'discord-api-types/v10';
 import type { APIGuild, APIPartialGuild, APIUser } from 'discord-api-types/v10';
-import { formatDiscordError, getRest, hasBotToken } from '../client.js';
+import { formatDiscordError, getRest } from '../client.js';
 import { loadState, patchState } from '../state.js';
+import { tokenGuard } from '../guards.js';
 
 const READ_ONLY = {
   readOnlyHint: true,
@@ -16,19 +17,6 @@ const STATE_WRITE = {
   destructiveHint: false,
   openWorldHint: false,
 } as const;
-
-function tokenGuard() {
-  if (hasBotToken()) return null;
-  return {
-    isError: true,
-    content: [
-      {
-        type: 'text' as const,
-        text: 'Discord bot token is not configured. Tell the user to open `/plugin`, find **discord**, and set the **Discord Bot Token** field.',
-      },
-    ],
-  };
-}
 
 interface PartialGuildWithOwner extends APIPartialGuild {
   owner?: boolean;

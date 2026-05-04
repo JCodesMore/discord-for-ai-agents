@@ -1,8 +1,9 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { Routes } from 'discord-api-types/v10';
 import type { APIUser } from 'discord-api-types/v10';
-import { formatDiscordError, getRest, hasBotToken } from '../client.js';
+import { formatDiscordError, getRest } from '../client.js';
 import { patchState } from '../state.js';
+import { tokenGuard } from '../guards.js';
 
 const READ_ONLY = {
   readOnlyHint: true,
@@ -20,17 +21,8 @@ export function registerWhoamiTool(server: McpServer): void {
       annotations: READ_ONLY,
     },
     async () => {
-      if (!hasBotToken()) {
-        return {
-          isError: true,
-          content: [
-            {
-              type: 'text' as const,
-              text: 'Discord bot token is not configured. Tell the user to open `/plugin`, find **discord**, and set the **Discord Bot Token** field.',
-            },
-          ],
-        };
-      }
+      const guard = tokenGuard();
+      if (guard) return guard;
       try {
         const rest = getRest();
         const user = (await rest.get(Routes.user('@me'))) as APIUser;
