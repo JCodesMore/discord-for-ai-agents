@@ -3,7 +3,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { Routes } from 'discord-api-types/v10';
 import type { APIGuildMember } from 'discord-api-types/v10';
 import { formatDiscordError, getRest } from '../client.js';
-import { getActiveGuildId } from '../state.js';
+import { getActiveGuildId, loadState } from '../state.js';
 import { activeGuildGuard } from '../guards.js';
 
 const READ_ONLY = {
@@ -132,7 +132,7 @@ export function registerMemberTools(server: McpServer): void {
     'discord_modify_member',
     {
       description:
-        "Modifies a guild member (PATCH /guilds/{id}/members/{user_id}). Pass only fields to change. Setting roles REPLACES the entire role set — for incremental edits use discord_assign_role / discord_remove_role. timeout_until is ISO8601 (max 28 days from now); pass null to lift an active timeout. mute/deaf/channel_id only affect members currently in voice.",
+        "Modifies a guild member (PATCH /guilds/{id}/members/{user_id}). Pass only fields to change. Setting roles REPLACES the entire role set — for incremental edits use discord_assign_role / discord_remove_role. timeout_until is ISO8601 (max 28 days from now); pass null to lift an active timeout. mute/deaf/channel_id only affect members currently in voice. Self-nick edits (user_id == bot's own id, nick is the only field) are auto-routed to PATCH /members/@me, which only requires Change Nickname instead of Manage Nicknames.",
       inputSchema: {
         user_id: z.string().min(1).describe('The user to modify.'),
         nick: z
@@ -140,7 +140,7 @@ export function registerMemberTools(server: McpServer): void {
           .max(32)
           .nullable()
           .optional()
-          .describe('Server nickname (max 32 chars). Pass null to clear. Requires Manage Nicknames perm.'),
+          .describe('Server nickname (max 32 chars). Pass null to clear. Manage Nicknames perm required for editing other members; Change Nickname is enough when editing the bot itself (auto-routed to @me).'),
         roles: z
           .array(z.string())
           .optional()
@@ -183,7 +183,16 @@ export function registerMemberTools(server: McpServer): void {
         if (deaf !== undefined) body.deaf = deaf;
         if (channel_id !== undefined) body.channel_id = channel_id;
         if (timeout_until !== undefined) body.communication_disabled_until = timeout_until;
-        const m = (await rest.patch(Routes.guildMember(getActiveGuildId(), user_id), {
+        const botUserId = loadState().bot_user_id;
+        const isSelfNickOnly =
+          botUserId !== undefined &&
+          user_id === botUserId &&
+          Object.keys(body).length === 1 &&
+          'nick' in body;
+        const route = isSelfNickOnly
+          ? Routes.guildMember(getActiveGuildId(), '@me')
+          : Routes.guildMember(getActiveGuildId(), user_id);
+        const m = (await rest.patch(route, {
           body,
           reason,
         })) as APIGuildMember;
