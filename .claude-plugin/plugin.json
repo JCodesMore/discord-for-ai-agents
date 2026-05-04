@@ -1,7 +1,7 @@
 {
   "name": "discord",
   "description": "Discord server admin via natural language — channels, roles, embeds, AutoMod, welcome screens, scheduled events, and full server templates",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": {
     "name": "JCodesMore",
     "url": "https://github.com/JCodesMore"
