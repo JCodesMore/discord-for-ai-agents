@@ -16,6 +16,9 @@ import { registerOnboardingTools } from './tools/onboarding.js';
 import { registerAutoModTools } from './tools/automod.js';
 import { registerScheduledEventTools } from './tools/scheduled-events.js';
 import { registerGuildTools } from './tools/guild.js';
+import { registerMemberTools } from './tools/members.js';
+import { registerWebhookTools } from './tools/webhooks.js';
+import { registerRawTool } from './tools/raw.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json'), 'utf-8'));
@@ -35,6 +38,9 @@ registerOnboardingTools(server);
 registerAutoModTools(server);
 registerScheduledEventTools(server);
 registerGuildTools(server);
+registerMemberTools(server);
+registerWebhookTools(server);
+registerRawTool(server);
 
 async function main() {
   const transport = new StdioServerTransport();
