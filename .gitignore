@@ -9,3 +9,4 @@ dist/
 .idea/
 temp/
 .claude/
+${CLAUDE_PLUGIN_DATA}
