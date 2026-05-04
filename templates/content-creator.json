@@ -34,7 +34,7 @@
   ],
   "channels": [
     { "name": "rules", "type": "text", "category": "Info", "topic": "Server rules and FAQs." },
-    { "name": "announcements", "type": "announcement", "category": "Info", "topic": "Stream schedule, releases, news." },
+    { "name": "announcements", "type": "text", "category": "Info", "topic": "Stream schedule, releases, news." },
     { "name": "schedule", "type": "text", "category": "Info", "topic": "Upcoming streams and content drops." },
     { "name": "general", "type": "text", "category": "Community", "topic": "Hang out with the community." },
     { "name": "fan-art", "type": "text", "category": "Community", "topic": "Share your art!" },

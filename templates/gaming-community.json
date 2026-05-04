@@ -41,7 +41,7 @@
   ],
   "channels": [
     { "name": "rules", "type": "text", "category": "Welcome", "topic": "Read these before posting." },
-    { "name": "announcements", "type": "announcement", "category": "Welcome", "topic": "Server news and updates." },
+    { "name": "announcements", "type": "text", "category": "Welcome", "topic": "Server news and updates." },
     { "name": "introductions", "type": "text", "category": "Welcome", "topic": "Tell us your favorite game." },
     { "name": "general", "type": "text", "category": "General", "topic": "Off-topic chat." },
     { "name": "memes", "type": "text", "category": "General", "topic": "Post your best." },

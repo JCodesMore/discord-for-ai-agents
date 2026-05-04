@@ -28,7 +28,7 @@
   ],
   "channels": [
     { "name": "rules", "type": "text", "category": "Welcome", "topic": "Read these before posting." },
-    { "name": "announcements", "type": "announcement", "category": "Welcome", "topic": "Releases, talks, community news." },
+    { "name": "announcements", "type": "text", "category": "Welcome", "topic": "Releases, talks, community news." },
     { "name": "introductions", "type": "text", "category": "Welcome", "topic": "What do you build?" },
     { "name": "general", "type": "text", "category": "Discussion", "topic": "Anything dev-related." },
     { "name": "career-talk", "type": "text", "category": "Discussion", "topic": "Jobs, interviews, career growth." },

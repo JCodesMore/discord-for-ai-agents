@@ -581,7 +581,7 @@ async function applyTemplate(
             actions,
           };
           if (Object.keys(md).length) body.trigger_metadata = md;
-          if (r.enabled !== undefined) body.enabled = r.enabled;
+          body.enabled = r.enabled ?? true;
           if (r.exempt_roles?.length) {
             const ids: string[] = [];
             for (const rn of r.exempt_roles) {
