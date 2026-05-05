@@ -23,7 +23,7 @@ Channels, roles, embeds, AutoMod, welcome screens, scheduled events — describe
 /plugin install discord@jcodesmore-plugins
 ```
 
-When prompted, paste your Discord bot token. (No bot yet? See [making a bot](#making-a-bot) below — it takes about a minute.) Then fully **restart Claude Code** so the MCP server picks up the token.
+No prompts, no restart. Install takes a second.
 
 **2. Run the setup wizard** — type:
 
@@ -31,7 +31,7 @@ When prompted, paste your Discord bot token. (No bot yet? See [making a bot](#ma
 /discord:setup
 ```
 
-Claude verifies the token, lists the servers your bot is in, helps you invite it to a new one if needed, and locks in an active guild for the session.
+Claude walks you through creating a Discord bot (or grabbing the token from one you already own), pasting it in, inviting it to a server, and locking in an active guild. The whole thing happens in chat.
 
 **3. That's it.** Talk to Claude like a sysadmin who actually wants to help.
 
@@ -52,7 +52,7 @@ The agent figures out which Discord primitives to call, validates inputs, and re
 
 ## What's inside
 
-**51 Discord tools** wrapped in **three skills** and **one agent** — covering channels, roles, messages, embeds, AutoMod, onboarding, welcome screens, scheduled events, members, webhooks, and bulk server templates.
+**52 Discord tools** wrapped in **three skills** and **one agent** — covering channels, roles, messages, embeds, AutoMod, onboarding, welcome screens, scheduled events, members, webhooks, and bulk server templates.
 
 | Capability | Try saying |
 |---|---|
@@ -72,13 +72,13 @@ The agent figures out which Discord primitives to call, validates inputs, and re
 
 ## Making a bot
 
-If you don't have a Discord bot yet:
+`/discord:setup` walks you through this in chat — these manual steps are here in case you'd rather do it before running the wizard:
 
 1. Go to <https://discord.com/developers/applications> and click **New Application**.
 2. Pick a name, accept the ToS, and open the **Bot** tab.
-3. Click **Reset Token** → **Yes, do it!** → **Copy** the token. This is what you'll paste when the plugin asks for it. Keep it secret.
+3. Click **Reset Token** → **Yes, do it!** → **Copy** the token. Keep it secret.
 4. Optional: turn on **Server Members Intent** under Privileged Gateway Intents if you want member listing. (Not required for most admin tasks.)
-5. Run `/discord:setup` in Claude Code. If your bot isn't in a server yet, the wizard generates an invite URL with the right permissions — open it in a browser and add the bot to a test server.
+5. Run `/discord:setup` in Claude Code and paste the token when asked. If your bot isn't in a server yet, the wizard generates an invite URL with the right permissions — open it in a browser and add the bot to a test server.
 
 For full admin tasks, give the bot **Administrator** permission. You can scope it down later once you know exactly which permissions you need.
 
@@ -96,7 +96,9 @@ Templates and the architect agent never delete or modify existing entities. Anyt
 <details>
 <summary><b>Bot token storage</b></summary>
 
-The token is stored in your system keychain (or `~/.claude/.credentials.json` on Linux) via Claude Code's `userConfig` mechanism — never written to disk in plain text by this plugin. The active-guild id and a verification timestamp live in `${CLAUDE_PLUGIN_DATA}/state.json` (non-sensitive) and survive plugin updates.
+The token you paste during `/discord:setup` is saved to `${CLAUDE_PLUGIN_DATA}/credentials.json` as plaintext JSON — that's a file under your Claude Code plugin data directory. Because you paste it in chat, it also lives in your local Claude Code session history file (the `.jsonl` for this conversation). Active-guild id and a verification timestamp live alongside it in `state.json`.
+
+This is a local-machine trust model: anyone with read access to your home directory can read the token. Don't paste production bot tokens on shared computers. If a token leaks, reset it at <https://discord.com/developers/applications> → your app → **Bot** → **Reset Token** and re-run `/discord:setup`.
 
 If you have a Discord owner account with 2FA enabled, also tick **Bot owner has MFA enabled** in `/plugin` config. Some destructive actions (kick, ban, certain deletes) require the MFA flag in production servers.
 

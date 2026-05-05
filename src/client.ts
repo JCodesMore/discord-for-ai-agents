@@ -1,6 +1,5 @@
 import { REST } from '@discordjs/rest';
-
-const TOKEN_ENV = 'CLAUDE_PLUGIN_OPTION_BOT_TOKEN';
+import { loadBotToken } from './credentials.js';
 
 let cachedRest: REST | null = null;
 let cachedTokenSignature: string | null = null;
@@ -8,21 +7,20 @@ let cachedTokenSignature: string | null = null;
 export class MissingTokenError extends Error {
   constructor() {
     super(
-      'Discord bot token is not configured. The user should open `/plugin`, find **discord**, and set the **Discord Bot Token** field. They can create a bot at https://discord.com/developers/applications.',
+      'Discord bot token is not configured. Run `/discord:setup` to set it up.',
     );
     this.name = 'MissingTokenError';
   }
 }
 
 export function getBotToken(): string {
-  const raw = process.env[TOKEN_ENV];
-  const token = (raw ?? '').trim();
+  const token = loadBotToken();
   if (!token) throw new MissingTokenError();
   return token;
 }
 
 export function hasBotToken(): boolean {
-  return !!(process.env[TOKEN_ENV] ?? '').trim();
+  return !!loadBotToken();
 }
 
 export function getRest(): REST {

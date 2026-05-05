@@ -8,10 +8,19 @@ import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 const dataDir = process.env.CLAUDE_PLUGIN_DATA;
-const tokenPresent = !!(process.env.CLAUDE_PLUGIN_OPTION_BOT_TOKEN || '').trim();
 
+let tokenPresent = false;
 let activeGuildLine = '';
+
 if (dataDir) {
+  const credPath = join(dataDir, 'credentials.json');
+  if (existsSync(credPath)) {
+    try {
+      const creds = JSON.parse(readFileSync(credPath, 'utf8'));
+      tokenPresent = !!(creds?.bot_token || '').trim();
+    } catch { /* ignore corrupt creds */ }
+  }
+
   const statePath = join(dataDir, 'state.json');
   if (existsSync(statePath)) {
     try {
@@ -29,7 +38,7 @@ if (!tokenPresent) {
   lines = [
     '# Discord plugin status',
     '',
-    'No bot token configured. Tell the user: open `/plugin`, find **discord**, and set the **Discord Bot Token** field. They can create a bot at https://discord.com/developers/applications. After that they should run `/discord:setup`.',
+    'No bot token configured. Suggest the user run `/discord:setup` — that walks through creating a bot, getting the token, and picking which server to manage.',
   ];
 } else if (!activeGuildLine) {
   lines = [
@@ -38,7 +47,7 @@ if (!tokenPresent) {
     '- Bot token: configured',
     '- Active guild: not set',
     '',
-    'Suggest the user run `/discord:setup` to verify the bot and pick an active guild.',
+    'Suggest the user run `/discord:setup` to pick an active guild.',
   ];
 } else {
   lines = [

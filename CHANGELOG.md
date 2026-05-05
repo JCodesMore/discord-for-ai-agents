@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-05-04
+
+Setup is now fully conversational. No install-time dialog, no Claude Code restart — install the plugin and run `/discord:setup`.
+
+### Changed
+
+- **Token capture moved into `/discord:setup`.** The install-time `userConfig.bot_token` prompt is gone. The setup skill now explains what a Discord bot token is, walks the user through generating one at https://discord.com/developers/applications, asks them to paste it in chat, and verifies + saves it via a new MCP tool. No `/plugin` config UI step required.
+- **Token storage moved from OS keychain to `${CLAUDE_PLUGIN_DATA}/credentials.json`.** Plain JSON file under your plugin data directory. The MCP server reads it at request time, so a freshly saved token works immediately — no Claude Code restart needed.
+
+### Added
+
+- `discord_save_token` — MCP tool that validates a token by calling Discord's `GET /users/@me`, then persists it to `credentials.json` only if Discord accepts it. Used exclusively by `/discord:setup`.
+- `src/credentials.ts` — module that owns the credentials file (read/write/path resolution).
+
+### Removed
+
+- `userConfig.bot_token` field from `.claude-plugin/plugin.json`. (`mfa_enabled` is unchanged.)
+- `CLAUDE_PLUGIN_OPTION_BOT_TOKEN` env var passthrough to the MCP server.
+
+### Migration from 0.1.0
+
+Existing users will see "no bot token configured" on the first 0.2.0 session, because the token is no longer read from the keychain. Run `/discord:setup` to paste it in (the wizard is the same flow you'd run on a fresh install). The old keychain entry can be deleted via `/plugin` config or left alone — nothing reads it anymore.
+
+### Security note
+
+Pasting the token in chat means it lives in two places on disk: `${CLAUDE_PLUGIN_DATA}/credentials.json` and your Claude Code session history file (`.jsonl`). This is a local-machine trust model — fine for personal machines, not appropriate for shared computers. See README "Bot token storage" for the full picture.
+
 ## [0.1.0] - 2026-05-04
 
 First public release. Hand Claude a Discord bot token, get a fully-administered server.

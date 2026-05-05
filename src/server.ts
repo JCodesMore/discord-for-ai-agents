@@ -7,6 +7,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
 import { registerWhoamiTool } from './tools/whoami.js';
+import { registerCredentialTools } from './tools/credentials.js';
 import { registerGuildSetupTools } from './tools/guilds.js';
 import { registerChannelTools } from './tools/channels.js';
 import { registerRoleTools } from './tools/roles.js';
@@ -30,6 +31,7 @@ const server = new McpServer({
 });
 
 registerWhoamiTool(server);
+registerCredentialTools(server);
 registerGuildSetupTools(server);
 registerChannelTools(server);
 registerRoleTools(server);

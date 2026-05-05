@@ -1,6 +1,6 @@
 ---
 name: discord:setup
-description: Set up the Discord plugin — verify bot token, list guilds, pick the active server. Run when starting fresh, switching guilds, or troubleshooting auth.
+description: Set up the Discord plugin — capture and verify the bot token, list guilds, pick the active server. Run when starting fresh, switching guilds, or troubleshooting auth.
 ---
 
 # Discord Plugin Setup
@@ -13,31 +13,49 @@ Call `mcp__discord__discord_whoami`.
 
 **Possible outcomes:**
 
-- **Returns bot identity** (ok: true, with `bot.username` and `bot.id`) → token works. Greet the user with the bot's name and continue to Step 2.
+- **Returns bot identity** (ok: true, with `bot.username` and `bot.id`) → token works. Greet the user with the bot's name and **skip to Step 3**.
 
   > Connected to **`<bot.username>`** (`<bot.id>`). Now let me see which servers it's in.
 
-- **Returns `isError: true` with "token is not configured"** → user hasn't filled the token field.
+- **Returns `isError: true` with "token is not configured"** → user has no token saved yet. **Continue to Step 2.**
 
-  Tell the user verbatim:
+- **Returns `isError: true` with HTTP 401** → a token is saved but Discord is rejecting it (probably reset on Discord's side or pasted partially before). Briefly say so and **continue to Step 2** to capture a fresh one.
 
-  > The Discord plugin needs a bot token before I can do anything.
-  >
-  > 1. Open the `/plugin` menu in Claude Code, find **discord**, and paste your bot token into the **Discord Bot Token** field. Get one (or copy an existing one) at https://discord.com/developers/applications → your app → **Bot** → **Reset Token**.
-  > 2. **Fully restart Claude Code** (quit the app, reopen) — the MCP server only reads the token at startup.
-  > 3. Then run `/discord:setup` again.
+  > The token I have on file isn't working — Discord rejected it. Let's get a fresh one.
 
-  Then **stop**. Don't continue to Step 2.
+- **Other error** → relay the error message verbatim and stop.
 
-- **Returns `isError: true` with HTTP 401** → token is set but invalid (probably reset on Discord's side).
+## Step 2 — Get and save a bot token
 
-  > The token Claude Code has stored doesn't work — Discord rejected it (HTTP 401). Most likely it was regenerated on the developer portal and the new value hasn't been pasted into `/plugin` yet. Reset and copy the token again at https://discord.com/developers/applications → your app → **Bot** → **Reset Token**, paste it into `/plugin` → **discord** → **Discord Bot Token**, then **fully restart Claude Code**.
+Tell the user (adjust wording naturally; the substance is what matters):
 
-  Then **stop**.
+> To control a Discord server I need a **bot token**. That's a credential Discord generates for an application (a "bot") you own — the bot acts on your behalf inside any server you give it access to.
+>
+> Here's how to get one:
+>
+> 1. Open <https://discord.com/developers/applications>.
+> 2. Click **New Application** (or open an existing one if you already have a bot). Name it whatever, accept the ToS.
+> 3. In the left sidebar, click **Bot**.
+> 4. Click **Reset Token** → **Yes, do it!** → **Copy**.
+> 5. Paste the token in this chat — I'll verify it and save it.
+>
+> Heads up: pasting the token here means it'll live in your local Claude Code chat history file (alongside the saved credentials file). That's fine on a personal machine, but don't paste production bot tokens on shared computers.
 
-- **Other error** → relay the error message and suggest the user check that the bot exists at the developer portal.
+**Wait for the user to actually paste the token.** Don't proceed until they do. Don't guess a value.
 
-## Step 2 — List guilds
+When they paste it, call:
+
+`mcp__discord__discord_save_token({ token: "<exactly what the user pasted, trimmed>" })`
+
+**Outcomes:**
+
+- **Returns `ok: true, bot: { id, username }`** → token saved and verified. Continue to Step 3.
+
+  > Saved. Connected as **`<bot.username>`** (`<bot.id>`). Now let me see which servers it's in.
+
+- **Returns `isError: true`** → relay the error message clearly and ask the user to try again. Common causes: pasted only part of the token, extra whitespace, or token actually rejected by Discord (in which case they need to reset and re-copy from the developer portal).
+
+## Step 3 — List guilds
 
 Call `mcp__discord__discord_list_guilds`.
 
@@ -55,7 +73,7 @@ Call `mcp__discord__discord_get_invite_url` (default permissions = `8`, Administ
 >
 > Let me know once you've added it to a server and I'll pick up from there.
 
-Wait for the user to confirm. Then loop back to **Step 2** (call `discord_list_guilds` again).
+Wait for the user to confirm. Then loop back to **Step 3** (call `discord_list_guilds` again).
 
 ### If `count: 1` (exactly one guild)
 
@@ -89,7 +107,7 @@ On success:
 
 > Set **`<guild.name>`** as active. Setup is done.
 
-## Step 3 — Recap (optional)
+## Step 4 — Recap (optional)
 
 If the user asks "what now?" or seems unsure, call `mcp__discord__discord_get_active_guild` to confirm state and remind them what they can do:
 
@@ -104,11 +122,11 @@ If the user asks "what now?" or seems unsure, call `mcp__discord__discord_get_ac
 
 ## Switching guilds later
 
-If the user runs `/discord:setup` and is already configured, jump straight to Step 2 — they're probably switching servers. Don't redo Step 1's onboarding text.
+If the user runs `/discord:setup` and is already configured (token works, guild set), jump straight to Step 3 — they're probably switching servers. Don't redo Step 2's onboarding text.
 
 ## Important rules
 
-- **Never paste the user's bot token into chat or any tool argument.** It lives in the keychain via `userConfig`. Only the MCP server subprocess reads it.
+- **Only call `discord_save_token` with a token the user explicitly typed during this setup flow.** Never guess, never reuse a value from elsewhere in the conversation, never invent one.
 - **Never call `discord_set_active_guild` with a guess.** If the user is ambiguous about which guild, list and ask.
-- **The session banner already reflects active-guild state on session start** — you don't need to repeat it unless the user asks.
+- **The session banner already reflects state on session start** — you don't need to repeat it unless the user asks.
 - If a tool call returns `isError: true`, surface the message clearly. Don't retry blindly.

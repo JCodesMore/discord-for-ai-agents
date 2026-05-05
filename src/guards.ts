@@ -8,7 +8,7 @@ export function tokenGuard() {
     content: [
       {
         type: 'text' as const,
-        text: 'Discord bot token is not configured. Tell the user to open `/plugin`, find **discord**, and set the **Discord Bot Token** field.',
+        text: 'Discord bot token is not configured. Tell the user to run `/discord:setup` — that walks through creating a bot, getting the token, and saving it.',
       },
     ],
   };
