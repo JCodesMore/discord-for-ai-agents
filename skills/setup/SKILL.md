@@ -9,7 +9,7 @@ You are walking the user through a conversational setup for the Discord plugin. 
 
 ## Step 1 — Check token presence
 
-Call `mcp__discord__discord_whoami`.
+Call `discord_whoami`.
 
 **Possible outcomes:**
 
@@ -45,7 +45,7 @@ Tell the user (adjust wording naturally; the substance is what matters):
 
 When they paste it, call:
 
-`mcp__discord__discord_save_token({ token: "<exactly what the user pasted, trimmed>" })`
+`discord_save_token({ token: "<exactly what the user pasted, trimmed>" })`
 
 **Outcomes:**
 
@@ -57,11 +57,11 @@ When they paste it, call:
 
 ## Step 3 — List guilds
 
-Call `mcp__discord__discord_list_guilds`.
+Call `discord_list_guilds`.
 
 ### If `count: 0` (bot is in no guilds)
 
-Call `mcp__discord__discord_get_invite_url` (default permissions = `8`, Administrator). Then tell the user:
+Call `discord_get_invite_url` (default permissions = `8`, Administrator). Then tell the user:
 
 > `<bot.username>` isn't in any servers yet. Open this link to invite it:
 >
@@ -77,7 +77,7 @@ Wait for the user to confirm. Then loop back to **Step 3** (call `discord_list_g
 
 ### If `count: 1` (exactly one guild)
 
-Auto-select it. Call `mcp__discord__discord_set_active_guild` with that guild's `id`.
+Auto-select it. Call `discord_set_active_guild` with that guild's `id`.
 
 > `<bot.username>` is in **`<guild.name>`** — I'll set that as the active server. From now on, every channel/role/etc. I create or modify will go to that server.
 >
@@ -99,7 +99,7 @@ Show the user the list and ask which one to control. Number the choices. Include
 > 2. **`<guild_2.name>`** (`<guild_2.id>`)
 > 3. ...
 
-Wait for the user's choice (number, name, or ID). Then call `mcp__discord__discord_set_active_guild` with the chosen `id`.
+Wait for the user's choice (number, name, or ID). Then call `discord_set_active_guild` with the chosen `id`.
 
 If the call fails (bot kicked between list and set, or 403): say so and re-run `discord_list_guilds`.
 
@@ -109,7 +109,7 @@ On success:
 
 ## Step 4 — Recap (optional)
 
-If the user asks "what now?" or seems unsure, call `mcp__discord__discord_get_active_guild` to confirm state and remind them what they can do:
+If the user asks "what now?" or seems unsure, call `discord_get_active_guild` to confirm state and remind them what they can do:
 
 > Right now I'm controlling **`<active_guild_name>`** as **`<bot_username>`**. Try:
 >

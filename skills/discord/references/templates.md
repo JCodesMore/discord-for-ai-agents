@@ -1,15 +1,10 @@
----
-name: discord:apply-template
-description: Apply a pre-built server template (or a custom JSON spec) to the active Discord guild. Bulk-creates roles, categories, channels, welcome screen, AutoMod rules, and scheduled events. Idempotent — anything matching by name is skipped.
----
+# Applying Discord Server Templates
 
-# Apply a Discord Server Template
-
-You're applying a server template to the active guild. A template is a JSON spec bundling roles, categories, channels, welcome screen, AutoMod rules, and scheduled events. Apply is **idempotent and create-only** — anything matching an existing entity by name is left alone, never modified or deleted.
+Use this when the user says "apply the X template" or pastes a custom JSON spec. Templates bulk-create roles, categories, channels, welcome screen, AutoMod rules, and scheduled events. Apply is **idempotent and create-only** — anything matching an existing entity by name is left alone, never modified or deleted.
 
 ## Step 1 — Confirm the active guild
 
-Call `mcp__discord__discord_get_active_guild`.
+Call `discord_get_active_guild`.
 
 - If `isError: true` ("no active guild") → tell the user to run `/discord:setup` first and **stop**.
 - Otherwise, anchor the rest of the conversation on `<active_guild_name>`.
@@ -18,7 +13,7 @@ Call `mcp__discord__discord_get_active_guild`.
 
 If the user already named one, skip to Step 3.
 
-Otherwise, call `mcp__discord__discord_list_templates` to get the current bundled list, then ask:
+Otherwise, call `discord_list_templates` to get the current bundled list, then ask:
 
 > Which template do you want to apply to **`<guild.name>`**?
 >
@@ -33,7 +28,7 @@ Otherwise, call `mcp__discord__discord_list_templates` to get the current bundle
 
 ## Step 3 — Optional dry run
 
-If the user is hesitant or wants to see the breakdown first, call `mcp__discord__discord_apply_template` with `template_name` (or `spec`) AND `dry_run: true`. Show the preview:
+If the user is hesitant or wants to see the breakdown first, call `discord_apply_template` with `template_name` (or `spec`) AND `dry_run: true`. Show the preview:
 
 > Dry run for **`<template_name>`** on **`<guild.name>`**:
 >
@@ -48,7 +43,7 @@ Wait for confirmation before Step 4. Don't apply until they say yes.
 
 ## Step 4 — Apply
 
-Call `mcp__discord__discord_apply_template` with `template_name` (or `spec`), no `dry_run`, and a clear `reason` like `"Applied via /discord:apply-template by user request."`.
+Call `discord_apply_template` with `template_name` (or `spec`), no `dry_run`, and a clear `reason` like `"Applied via /discord by user request."`.
 
 Read the returned `counts` and `summary` and report to the user grouped by status. Example:
 

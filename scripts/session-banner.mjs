@@ -55,7 +55,7 @@ if (!tokenPresent) {
     '',
     '- Bot token: configured' + activeGuildLine,
     '',
-    'Discord admin tools are ready. Use the `mcp__discord__*` tools to manage the active guild.',
+    'Discord admin tools are ready. Use the `discord_*` tools (or just ask in plain English) to manage the active guild.',
   ];
 }
 

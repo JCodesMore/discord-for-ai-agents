@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-05-06
+
+One front door for everything. Type `/discord` for any Discord task, `/discord:setup` for configuration. That's it.
+
+### Changed
+
+- **Front-door consolidation.** The plugin now exposes two skills instead of three: `/discord` (do-anything) and `/discord:setup` (one-shot configuration). Modeled after the YouTube plugin's `/youtube` + `/youtube:setup` shape.
+- **`/discord` is the conversational entry point.** Typed bare, it reports current bot + active-guild status and offers a capabilities menu. Typed with a request, it routes the user's intent: open-ended briefs spawn the `discord-architect` sub-agent, "apply X template" runs the inline template flow, concrete asks ("create a #lobby channel") call the matching `discord_*` tool directly.
+- **Stale tool-prefix references replaced with bare names.** `skills/setup/SKILL.md` and `scripts/session-banner.mjs` now use `discord_*` (e.g., `discord_whoami`) instead of the stale `mcp__discord__discord_*` prefix. Bare names match the live convention used by the architect agent and the YouTube plugin.
+
+### Added
+
+- **`skills/discord/SKILL.md`** — the new front door. Welcome message with three states (no token / no guild / fully configured), intent-routing table, common-tools cheat sheet, common-flow recipes, and a pointer to `references/` for deeper workflows.
+- **`skills/discord/references/templates.md`** — progressive-disclosure detail on the template-apply flow, lifted from the old `apply-template` skill (dry-run-then-apply, the four bundled templates, custom JSON spec shape, name-based cross-refs, Community/AutoMod gotchas).
+- **`skills/discord/references/architect.md`** — progressive-disclosure detail on spawning the `discord-architect` agent for open-ended briefs, lifted from the old `server-from-prompt` skill.
+
+### Removed
+
+- **`/discord:apply-template`** skill. Functionality is now reachable via `/discord apply the X template` (intent-routed, with the same dry-run-then-apply flow). Clean break — no redirect shim.
+- **`/discord:server-from-prompt`** skill. Functionality is now reachable via `/discord make me a server for X` (intent-routed, spawns the same architect agent). Clean break — no redirect shim.
+- Stray literal `${CLAUDE_PLUGIN_DATA}/` directory in the repo root, left over from an early dev session where the env var didn't expand. Already gitignored — just clutter.
+
+### Fixed
+
+- 13 references to the stale tool prefix `mcp__discord__discord_*` (7 in `skills/setup/SKILL.md`, 4 in the now-removed `apply-template` skill, 1 in the now-removed `server-from-prompt` skill, 1 in the SessionStart banner). The live MCP tool prefix is `mcp__plugin_discord_discord__`; bare suffix names like `discord_whoami` are the safest convention since they don't depend on plugin-loader-side prefixing.
+
+### Migration from 0.2.0
+
+No state or credentials changes — `${CLAUDE_PLUGIN_DATA}/credentials.json` and `state.json` are untouched. After updating, the only user-visible difference is that `/discord:apply-template` and `/discord:server-from-prompt` no longer autocomplete or resolve. Both flows are reachable via plain `/discord ...` instead.
+
 ## [0.2.0] - 2026-05-04
 
 Setup is now fully conversational. No install-time dialog, no Claude Code restart — install the plugin and run `/discord:setup`.

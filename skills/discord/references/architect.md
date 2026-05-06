@@ -1,15 +1,10 @@
----
-name: discord:server-from-prompt
-description: Conversationally design and build a Discord server from a natural-language brief like "make me a Magic: The Gathering trading server." Spawns the discord-architect agent which drafts a template spec, dry-runs it, and applies it after user approval.
----
+# Building a Server from a Natural-Language Brief
 
-# Build a Discord Server from a Natural-Language Brief
-
-You're helping the user describe a Discord server in plain language and watch it materialize. The actual work is delegated to the **discord-architect** sub-agent — you orchestrate the spawn, then let the agent drive the design + dry-run + apply loop.
+Use this when the user gives an open-ended brief — *"make me a Magic: The Gathering trading server"*, *"set up a Discord for my book club"*, *"build a community for indie game devs."* The actual design + apply work goes to the **discord-architect** sub-agent. You're the orchestrator: confirm the active guild, spawn the agent, relay the result.
 
 ## Step 1 — Confirm the active guild
 
-Call `mcp__discord__discord_get_active_guild`.
+Call `discord_get_active_guild`.
 
 - If `isError: true` ("no active guild") → tell the user to run `/discord:setup` first and **stop**.
 - Otherwise, anchor the conversation on `<guild.name>` (id `<guild.id>`).
@@ -18,7 +13,7 @@ Call `mcp__discord__discord_get_active_guild`.
 
 ## Step 2 — Capture the brief
 
-If the user provided a brief inline (e.g., `/discord:server-from-prompt make me a Magic: The Gathering trading server`), use it as-is.
+If the user provided a brief inline (e.g., `/discord make me a Magic: The Gathering trading server`), use it as-is.
 
 Otherwise, ask:
 
@@ -69,11 +64,11 @@ After a successful build, offer:
 > - **Set channel-specific permission overwrites** (e.g., gate `subs-only` behind a role)
 > - **Send a welcome embed** to `#announcements`
 > - **Schedule a recurring event** in one of the new voice channels
-> - **Add a layer** — re-run `/discord:server-from-prompt` with a follow-up like "add a marketplace category for trading"
+> - **Add a layer** — give me a follow-up like "add a marketplace category for trading"
 
 ## Notes
 
-- **One agent invocation per brief.** Don't loop or re-spawn — if the user wants major changes after apply, run the skill again with a follow-up brief.
-- **The architect handles dry-run + apply itself** — don't call `discord_apply_template` from this skill directly.
+- **One agent invocation per brief.** Don't loop or re-spawn — if the user wants major changes after apply, take a follow-up brief and spawn again.
+- **The architect handles dry-run + apply itself** — don't call `discord_apply_template` from the orchestrator directly.
 - **If the architect fails to design** (e.g., spec validation rejects), surface the error and ask the user to refine the brief, then re-spawn.
-- **The architect runs in the foreground** so its `AskUserQuestion` calls reach the user. Don't pass `background: true` to the Agent tool.
+- **The architect runs in the foreground** so its `AskUserQuestion` calls reach the user. Don't pass `run_in_background: true` to the Agent tool.

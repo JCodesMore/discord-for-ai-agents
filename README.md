@@ -33,39 +33,39 @@ No prompts, no restart. Install takes a second.
 
 Claude walks you through creating a Discord bot (or grabbing the token from one you already own), pasting it in, inviting it to a server, and locking in an active guild. The whole thing happens in chat.
 
-**3. That's it.** Talk to Claude like a sysadmin who actually wants to help.
+**3. That's it.** Type `/discord` anytime — that's the do-anything front door. Talk to Claude like a sysadmin who actually wants to help.
 
 ## Try it
 
-Talk to Claude like a friend who happens to know Discord inside-out:
+Everything routes through `/discord`. Talk to Claude like a friend who happens to know Discord inside-out:
 
-- *"Make me a Magic: The Gathering trading server."* → `/discord:server-from-prompt`
-- *"Apply the dev-community template to this server."* → `/discord:apply-template`
-- *"Create a #welcome channel under a category called Info, with a topic of 'Read the rules first.'"*
-- *"Add a Moderator role with kick and ban perms, blurple color, and grant it to me."*
-- *"Drop an embed announcement in #announcements with the stream schedule and a thumbnail."*
-- *"Set up an AutoMod rule that blocks invite links for non-mods."*
-- *"Configure the welcome screen with three intro channels and a friendly description."*
-- *"Schedule a community game night in the Lobby voice channel for next Friday at 7pm."*
+- *"`/discord` make me a Magic: The Gathering trading server."* — designs and applies a full server template
+- *"`/discord` apply the dev-community template to this server."* — picks a starter template, dry-runs, applies
+- *"`/discord` create a #welcome channel under a category called Info, with a topic of 'Read the rules first.'"*
+- *"`/discord` add a Moderator role with kick and ban perms, blurple color, and grant it to me."*
+- *"`/discord` drop an embed announcement in #announcements with the stream schedule and a thumbnail."*
+- *"`/discord` set up an AutoMod rule that blocks invite links for non-mods."*
+- *"`/discord` configure the welcome screen with three intro channels and a friendly description."*
+- *"`/discord` schedule a community game night in the Lobby voice channel for next Friday at 7pm."*
 
-The agent figures out which Discord primitives to call, validates inputs, and reports back what changed (and what failed, with Discord's actual error messages).
+You can also just type `/discord` with no arguments to see the current bot + active server and get a menu of suggestions. The agent figures out which Discord primitives to call, validates inputs, and reports back what changed (and what failed, with Discord's actual error messages).
 
 ## What's inside
 
-**52 Discord tools** wrapped in **three skills** and **one agent** — covering channels, roles, messages, embeds, AutoMod, onboarding, welcome screens, scheduled events, members, webhooks, and bulk server templates.
+**52 Discord tools** wrapped in **two skills** and **one agent** — covering channels, roles, messages, embeds, AutoMod, onboarding, welcome screens, scheduled events, members, webhooks, and bulk server templates. `/discord` is the do-anything front door; `/discord:setup` is the one-shot configuration wizard.
 
 | Capability | Try saying |
 |---|---|
-| Build a server from a prompt | *"make me a server for [X]"* |
-| Apply a starter template | *"apply the gaming-community template"* |
-| Channels & categories | *"create a #general channel under Welcome"* |
-| Roles & permissions | *"add a Mod role with kick perms and grant it to me"* |
-| Messages & embeds | *"send a multi-field embed to #announcements"* |
-| AutoMod rules | *"block invite links from non-mods"* |
-| Welcome screen | *"set up a welcome screen with rules and intros"* |
-| Scheduled events | *"schedule a movie night for Saturday at 8pm"* |
-| Members & moderation | *"kick the user named X with reason: spam"* |
-| Webhooks | *"create a webhook in #releases and post the changelog"* |
+| Build a server from a prompt | *"`/discord` make me a server for [X]"* |
+| Apply a starter template | *"`/discord` apply the gaming-community template"* |
+| Channels & categories | *"`/discord` create a #general channel under Welcome"* |
+| Roles & permissions | *"`/discord` add a Mod role with kick perms and grant it to me"* |
+| Messages & embeds | *"`/discord` send a multi-field embed to #announcements"* |
+| AutoMod rules | *"`/discord` block invite links from non-mods"* |
+| Welcome screen | *"`/discord` set up a welcome screen with rules and intros"* |
+| Scheduled events | *"`/discord` schedule a movie night for Saturday at 8pm"* |
+| Members & moderation | *"`/discord` kick the user named X with reason: spam"* |
+| Webhooks | *"`/discord` create a webhook in #releases and post the changelog"* |
 | Anything else | `discord_raw_request` — direct REST escape hatch |
 
 **Bundled server templates:** `gaming-community`, `study-group`, `dev-community`, `content-creator`. Compose your own as a JSON spec or describe what you want and let the architect agent draft one.
