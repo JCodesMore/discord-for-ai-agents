@@ -29,7 +29,7 @@ Channels, roles, embeds, AutoMod, welcome screens, scheduled events — describe
 /plugin install discord@jcodesmore-plugins
 ```
 
-No prompts, no restart. Install takes a second.
+Then fully **restart Claude Code** (quit the app and reopen) so the new skills load.
 
 **2. Run the setup wizard** — type:
 
