@@ -8,11 +8,17 @@ Channels, roles, embeds, AutoMod, welcome screens, scheduled events — describe
 
 [![Discord](https://img.shields.io/badge/Join_the_community-Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/babcVNJBet)
 
-[Quick Start](#quick-start) · [Try it](#try-it) · [Discord](https://discord.gg/babcVNJBet)
+[Quick Start](#quick-start) · [Try it](#try-it) · [Discord](https://discord.gg/babcVNJBet) · [Demo](#demo)
 
 </div>
 
 ---
+
+## Demo
+
+[![Watch the demo](https://img.youtube.com/vi/iujymigLrP0/maxresdefault.jpg)](https://youtu.be/iujymigLrP0)
+
+> Click the image to watch the walkthrough.
 
 ## Quick Start
 
@@ -33,7 +39,7 @@ No prompts, no restart. Install takes a second.
 
 Claude walks you through creating a Discord bot (or grabbing the token from one you already own), pasting it in, inviting it to a server, and locking in an active guild. The whole thing happens in chat.
 
-**3. That's it.** Type `/discord` anytime — that's the do-anything front door. Talk to Claude like a sysadmin who actually wants to help.
+**3. That's it.** Type `/discord` anytime — that's the do-anything front door. Talk to Claude like a friend who knows Discord inside-out.
 
 ## Try it
 
@@ -52,7 +58,7 @@ You can also just type `/discord` with no arguments to see the current bot + act
 
 ## What's inside
 
-**52 Discord tools** wrapped in **two skills** and **one agent** — covering channels, roles, messages, embeds, AutoMod, onboarding, welcome screens, scheduled events, members, webhooks, and bulk server templates. `/discord` is the do-anything front door; `/discord:setup` is the one-shot configuration wizard.
+**51 Discord tools** wrapped in **two skills** and **one agent** — covering channels, roles, messages, embeds, AutoMod, onboarding, welcome screens, scheduled events, members, webhooks, and bulk server templates. `/discord` is the do-anything front door; `/discord:setup` is the one-shot configuration wizard.
 
 | Capability | Try saying |
 |---|---|
@@ -69,18 +75,6 @@ You can also just type `/discord` with no arguments to see the current bot + act
 | Anything else | `discord_raw_request` — direct REST escape hatch |
 
 **Bundled server templates:** `gaming-community`, `study-group`, `dev-community`, `content-creator`. Compose your own as a JSON spec or describe what you want and let the architect agent draft one.
-
-## Making a bot
-
-`/discord:setup` walks you through this in chat — these manual steps are here in case you'd rather do it before running the wizard:
-
-1. Go to <https://discord.com/developers/applications> and click **New Application**.
-2. Pick a name, accept the ToS, and open the **Bot** tab.
-3. Click **Reset Token** → **Yes, do it!** → **Copy** the token. Keep it secret.
-4. Optional: turn on **Server Members Intent** under Privileged Gateway Intents if you want member listing. (Not required for most admin tasks.)
-5. Run `/discord:setup` in Claude Code and paste the token when asked. If your bot isn't in a server yet, the wizard generates an invite URL with the right permissions — open it in a browser and add the bot to a test server.
-
-For full admin tasks, give the bot **Administrator** permission. You can scope it down later once you know exactly which permissions you need.
 
 ## Community
 
@@ -101,6 +95,21 @@ The token you paste during `/discord:setup` is saved to `${CLAUDE_PLUGIN_DATA}/c
 This is a local-machine trust model: anyone with read access to your home directory can read the token. Don't paste production bot tokens on shared computers. If a token leaks, reset it at <https://discord.com/developers/applications> → your app → **Bot** → **Reset Token** and re-run `/discord:setup`.
 
 If you have a Discord owner account with 2FA enabled, also tick **Bot owner has MFA enabled** in `/plugin` config. Some destructive actions (kick, ban, certain deletes) require the MFA flag in production servers.
+
+</details>
+
+<details>
+<summary><b>Making a bot manually</b></summary>
+
+`/discord:setup` walks you through this in chat — these manual steps are here in case you'd rather do it before running the wizard:
+
+1. Go to <https://discord.com/developers/applications> and click **New Application**.
+2. Pick a name, accept the ToS, and open the **Bot** tab.
+3. Click **Reset Token** → **Yes, do it!** → **Copy** the token. Keep it secret.
+4. Optional: turn on **Server Members Intent** under Privileged Gateway Intents if you want member listing. (Not required for most admin tasks.)
+5. Run `/discord:setup` in Claude Code and paste the token when asked. If your bot isn't in a server yet, the wizard generates an invite URL with the right permissions — open it in a browser and add the bot to a test server.
+
+For full admin tasks, give the bot **Administrator** permission. You can scope it down later once you know exactly which permissions you need.
 
 </details>
 
