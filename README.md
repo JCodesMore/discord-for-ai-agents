@@ -2,9 +2,9 @@
 
 # Discord for AI Agents
 
-### Hand Claude a bot token. Get a fully-built Discord server.
+### Run your Discord server by talking to Claude.
 
-Channels, roles, embeds, AutoMod, welcome screens, scheduled events — described in plain English and applied with one tool call. Or hand Claude a one-line brief and watch a whole server materialize.
+Describe what you want and Claude builds it: a whole community, a single channel, a new role, a welcome screen, an automod rule. No menus, no settings panels, no clicking around.
 
 [![Discord](https://img.shields.io/badge/Join_the_community-Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/babcVNJBet)
 
